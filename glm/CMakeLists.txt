@@ -43,7 +43,11 @@ source_group("SIMD Files" FILES ${SIMD_INLINE})
 source_group("SIMD Files" FILES ${SIMD_HEADER})
 
 add_library(glm INTERFACE)
-target_include_directories(glm INTERFACE ../)
+target_include_directories(glm
+	INTERFACE
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../>
+		$<INSTALL_INTERFACE:include>
+)
 
 if(BUILD_STATIC_LIBS)
 add_library(glm_static STATIC ${ROOT_TEXT} ${ROOT_MD} ${ROOT_NAT}
@@ -68,3 +72,16 @@ add_library(glm_shared SHARED ${ROOT_TEXT} ${ROOT_MD} ${ROOT_NAT}
 	target_link_libraries(glm_shared PUBLIC glm)
 	add_library(glm::glm_shared ALIAS glm_shared)
 endif()
+
+install (
+	DIRECTORY .
+	DESTINATION include/glm
+)
+
+install (
+	FILES
+		../cmake/glm/glmConfig.cmake
+		../cmake/glm/glmConfig-version.cmake
+	DESTINATION
+		lib/cmake/glm
+)
